@@ -16,7 +16,12 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.get('/hello', (req: Request, res: Response) => {
-  res.send('Welcome to GET Route: Hello World!');
+  const name: string = (req.query.name as string) || 'anónimo';
+  res.status(200).send({ data: { message: `Hola, ${name}` } });
+});
+
+app.get('/goodbye', (req: Request, res: Response) => {
+  res.status(200).send({ data: { message: 'Goodbye, world' } });
 });
 
 // Execute APP and listen Requests on PORT
