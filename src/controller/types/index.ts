@@ -11,6 +11,14 @@ export type BasicResponse = {
  */
 
 export type ErrorResponse = {
-  error: string,
-  message: string
+  error: string;
+  message: string;
+};
+
+/***
+ * JSON response with date for Controllers
+ */
+
+export type ResponseWithDate = BasicResponse & {
+  date: string;
 };
