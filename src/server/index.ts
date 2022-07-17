@@ -16,6 +16,9 @@ const server: Express = express();
 // From this point onward: http://localhost:8000/api/
 server.use('/api', rootRouter);
 
+// * Static server
+server.use(express.static('public'));
+
 // TODO: Mongoose Connection
 
 // * Security Config
