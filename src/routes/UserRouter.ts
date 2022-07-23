@@ -73,5 +73,5 @@ userRouter
     // Send response to client
     return res.send(response);
   });
-// Export Hello Router
+// Export User Router
 export default userRouter;

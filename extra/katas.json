@@ -1,0 +1,91 @@
+[{
+  "_id": {
+    "$oid": "62d9b19d89fff9d276b51b29"
+  },
+  "name": "Two Sum",
+  "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.You may assume that each input would have exactly one solution, and you may not use the same element twice.You can return the answer in any order.\n Example 1:\n Input: nums = [2,7,11,15], target = 9\nOutput: [0,1]\nExplanation: Because nums[0] + nums[1] == 9, we return [0, 1].\nExample 2:\nInput: nums = [3,2,4], target = 6\nOutput: [1,2]",
+  "level": "Easy",
+  "author": {
+    "$oid": "62d75aebf1f811349e4475a9"
+  },
+  "date": {
+    "$date": {
+      "$numberLong": "1658433949784"
+    }
+  },
+  "valoration": 2.2,
+  "chances": 25,
+  "peopleWhoRated": 5
+},{
+  "_id": {
+    "$oid": "62d9b542082f38959a6b8f4a"
+  },
+  "name": "Letter Combinations of a Phone Number",
+  "description": "Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.\nA mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.\n\nExample 1:\nInput: digits = '23'\nOutput: ['ad','ae','af','bd','be','bf','cd','ce','cf']\n\nExample 2:\nInput: digits = ''\nOutput: []\n\nExample 3:\nInput: digits = '2'\nOutput: ['a','b','c']",
+  "level": "Medium",
+  "author": {
+    "$oid": "62d75aebf1f811349e4475ac"
+  },
+  "date": {
+    "$date": {
+      "$numberLong": "1658434882155"
+    }
+  },
+  "valoration": 1,
+  "chances": 4,
+  "peopleWhoRated": 2
+},{
+  "_id": {
+    "$oid": "62d9b6b8082f38959a6b8f4c"
+  },
+  "name": "Generate Parentheses",
+  "description": "Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.\n\nExample 1:\n\nInput: n = 3\nOutput: ['((()))','(()())','(())()','()(())','()()()']\n\nExample 2:\nInput: n = 1\nOutput: ['()']\n\nConstraints:\n1 <= n <= 8",
+  "level": "Medium",
+  "author": {
+    "$oid": "62d75aebf1f811349e4475ac"
+  },
+  "date": {
+    "$date": {
+      "$numberLong": "1658435256080"
+    }
+  },
+  "valoration": 4,
+  "chances": 22,
+  "peopleWhoRated": 6
+},{
+  "_id": {
+    "$oid": "62d9b94e082f38959a6b8f4e"
+  },
+  "name": "Merge k Sorted Lists",
+  "description": "You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.\nMerge all the linked-lists into one sorted linked-list and return it.\n\n\nExample 1:\nInput: lists = [[1,4,5],[1,3,4],[2,6]]\nOutput: [1,1,2,3,4,4,5,6]\nExplanation: The linked-lists are:\n[\n  1->4->5,\n1->3->4,\n2->6\n]\nmerging them into one sorted list:\n1->1->2->3->4->4->5->6\n\nExample 2:\nInput: lists = []\nOutput: []\n\nExample 3:\nInput: lists = [[]]\nOutput: []",
+  "level": "Hard",
+  "author": {
+    "$oid": "62d75aebf1f811349e4475ad"
+  },
+  "date": {
+    "$date": {
+      "$numberLong": "1658435918679"
+    }
+  },
+  "valoration": 3.5,
+  "chances": 10,
+  "peopleWhoRated": 8
+},{
+  "_id": {
+    "$oid": "62d9ba8d082f38959a6b8f50"
+  },
+  "name": "Single Number",
+  "description": "Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.\nYou must implement a solution with a linear runtime complexity and use only constant extra space.\n\nExample 1:\nInput: nums = [2,2,1]\nOutput: 1\n\nExample 2:\nInput: nums = [4,1,2,1,2]\nOutput: 4\n\nExample 3:\nInput: nums = [1]\nOutput: 1\n\n\nConstraints:\n1 <= nums.length <= 3 * 104\n-3 * 104 <= nums[i] <= 3 * 104\nEach element in the array appears twice except for one element which appears only once.",
+  "level": "Easy",
+  "author": {
+    "$oid": "62d75aebf1f811349e4475ad"
+  },
+  "date": {
+    "$date": {
+      "$numberLong": "1658436237966"
+    }
+  },
+  "valoration": 4.3,
+  "chances": 50,
+  "peopleWhoRated": 10
+}]

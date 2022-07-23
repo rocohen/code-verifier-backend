@@ -1,6 +1,6 @@
-import { Delete, Get, Post, Put, Query, Route, Tags } from 'tsoa';
+import { Body, Delete, Get, Post, Put, Query, Route, Tags } from 'tsoa';
 import { IUserController } from './interfaces';
-import { LogSuccess, LogError, LogWarning } from '../utils/logger';
+import { LogSuccess, LogWarning } from '../utils/logger';
 
 // ORM - Users Collection
 import {
@@ -58,8 +58,13 @@ export class UserController implements IUserController {
     return response;
   }
 
+  /**
+   * Endpoint that creates a new User
+   * @param {any} user data to create a new User
+   * @returns message informing if user was created successfully
+   */
   @Post('/')
-  public async createUser(user: any): Promise<any> {
+  public async createUser(@Body() user: any): Promise<any> {
     let response: any = '';
     LogSuccess(`[/api/users] Create User ${user}`);
     await createUser(user).then((r) => {
@@ -70,8 +75,14 @@ export class UserController implements IUserController {
     return response;
   }
 
+  /**
+   * Endpoint that updates a User by ID from "Users" collection in DB
+   * @param {string} id Id of user to update
+   * @param {any} user user data to update
+   * @returns message informing if user was updated successfully
+   */
   @Put('/')
-  public async updateUser(@Query()id: string, user: any): Promise<any> {
+  public async updateUser(@Query()id: string, @Body() user: any): Promise<any> {
     let response: any = '';
 
     if (id) {
