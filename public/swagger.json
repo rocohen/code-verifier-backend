@@ -17,6 +17,47 @@
 				],
 				"type": "object",
 				"description": "*\r\nBasic JSON response for Controllers"
+			},
+			"IUser": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"age": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"email",
+					"password",
+					"age"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IAuth": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -72,7 +113,7 @@
 				"operationId": "GetUsers",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "All users or user found by ID",
 						"content": {
 							"application/json": {
 								"schema": {}
@@ -87,6 +128,7 @@
 				"security": [],
 				"parameters": [
 					{
+						"description": "Id of user to retrieve (optional)",
 						"in": "query",
 						"name": "id",
 						"required": false,
@@ -98,6 +140,61 @@
 			},
 			"delete": {
 				"operationId": "DeleteUser",
+				"responses": {
+					"200": {
+						"description": "message informing if user was deleted successfully",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint that deletes a User by ID from \"Users\" collection in DB",
+				"tags": [
+					"UserController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id of user to delete (optional)",
+						"in": "query",
+						"name": "id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"UserController"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {}
+						}
+					}
+				}
+			},
+			"put": {
+				"operationId": "UpdateUser",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -116,12 +213,103 @@
 					{
 						"in": "query",
 						"name": "id",
-						"required": false,
+						"required": true,
 						"schema": {
 							"type": "string"
 						}
 					}
-				]
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/register": {
+			"post": {
+				"operationId": "RegisterUser",
+				"responses": {
+					"200": {
+						"description": "new user created and stored in db",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint that registers a new User",
+				"tags": [
+					"AuthController"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "user to be created",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IUser",
+								"description": "user to be created"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/login": {
+			"post": {
+				"operationId": "LoginUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"AuthController"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IAuth"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/logout": {
+			"post": {
+				"operationId": "LogoutUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"AuthController"
+				],
+				"security": [],
+				"parameters": []
 			}
 		}
 	},
