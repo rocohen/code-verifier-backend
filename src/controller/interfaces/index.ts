@@ -1,3 +1,4 @@
+import { IUser } from '../../domain/interfaces/IUser.interface';
 import { BasicResponse } from '../types';
 
 export interface IHelloController {
@@ -13,4 +14,11 @@ export interface IUserController {
   createUser(user: any): Promise<any>;
   // Update User
   updateUser(id: string, user: any): Promise<any>;
+}
+
+export interface IAuthController {
+  // register users
+  registerUser(user: IUser): Promise<any>;
+  // login user
+  loginUser(auth: any): Promise<any>;
 }

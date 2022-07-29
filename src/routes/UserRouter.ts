@@ -18,7 +18,7 @@ userRouter
     // Obtain Response
     const response: any = await controller.getUsers(id);
     // Send response to client
-    return res.send(response);
+    return res.status(200).send(response);
   })
   // DELETE
   .delete(async (req: Request, res: Response) => {
@@ -30,7 +30,7 @@ userRouter
     // Obtain Response
     const response: any = await controller.deleteUser(id);
     // Send response to client
-    return res.send(response);
+    return res.status(200).send(response);
   })
   // POST
   .post(async (req: Request, res: Response) => {
@@ -48,7 +48,7 @@ userRouter
     // Obtain Response
     const response: any = await controller.createUser(user);
     // Send response to client
-    return res.send(response);
+    return res.status(201).send(response);
   })
   // UPDATE
   .put(async (req: Request, res: Response) => {
@@ -71,7 +71,15 @@ userRouter
     // Obtain Response
     const response: any = await controller.updateUser(id, user);
     // Send response to client
-    return res.send(response);
+    return res.status(200).send(response);
   });
-// Export Hello Router
+
+// Export User Router
 export default userRouter;
+
+/**
+ * Get Documents => 200 OK
+ * Creation Documents => 201 OK
+ * Deletion of Documents => 200 (Entity) / 204 (No return)
+ * Update of Documnets => 200 (Entity) / 204 (No return)
+ */
