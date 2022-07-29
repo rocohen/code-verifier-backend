@@ -1,5 +1,5 @@
 import { userEntity } from '../entities/User.entity';
-import { LogSuccess, LogError } from '../../utils/logger';
+import { LogError } from '../../utils/logger';
 import { IUser } from '../interfaces/IUser.interface';
 import { IAuth } from '../interfaces/IAuth.interface';
 
@@ -16,7 +16,7 @@ import jwt from 'jsonwebtoken';
 dotenv.config();
 
 // Obtain Secret key to generate JWT
-const secret = process.env.SECRETKEY || 'MYSECRETKEY';
+const secret: string = process.env.SECRETKEY || 'MYSECRETKEY';
 
 // CRUD
 
@@ -28,7 +28,7 @@ export const getAllUsers = async (): Promise<any[] | undefined> => {
     const userModel = userEntity();
 
     // Search all users
-    return await userModel.find({ isDelete: false });
+    return await userModel.find({ isDelete: false }, { password: 0 });
   } catch (error) {
     LogError(`[ORM ERROR]: Getting All Users: ${error}`);
   }
@@ -39,7 +39,7 @@ export const getUserByID = async (id: string): Promise<any | undefined> => {
   try {
     const userModel = userEntity();
     // Search User by ID
-    return await userModel.findById(id);
+    return await userModel.findById({ _id: id }, { password: 0 });
   } catch (error) {
     LogError(`[ORM ERROR]: Getting User By ID: ${error}`);
   }
@@ -96,31 +96,38 @@ export const registerUser = async (user: IUser): Promise<any | undefined> => {
 export const loginUser = async (auth: IAuth): Promise<any | undefined> => {
   try {
     const userModel = userEntity();
-    // Find User by email
-    userModel.findOne({ email: auth.email }, (err: any, user: IUser) => {
-      if (err) {
-        // TODO: return ERROR --> ERROR while searching (500)
-      }
 
-      if (!user) {
-        // TODO: return ERROR --> ERROR USER NOT FOUND (404)
-      }
+    // Check if user exists by Unique Email
+    const user: IUser | null = await userModel.findOne({ email: auth.email });
 
-      // Use Bcrypt to compare Password
-      const validPassword = bcrypt.compareSync(auth.password, user.password);
+    if (!user) {
+      console.error(`[ERROR Authentication in ORM]: User Not Found`);
+      return {
+        error: '[AUTH ERROR]: Email & Password are needed',
+        message: 'Please, provide a valid email && password to login',
+      };
+    }
 
-      if (!validPassword) {
-        // TODO: --> Unauthorized (401)
-      }
+    // Check if Password is Valid (compare with bcrypt)
+    const validPassword = bcrypt.compareSync(auth.password, user.password);
 
-      // Create JWT
-      // TODO: Secret must be in .env
-      const token = jwt.sign({ email: user.email }, secret, {
-        expiresIn: '2h',
-      });
+    if (!validPassword) {
+      console.error(`[ERROR Authentication in ORM]: Password Not Valid`);
+      return {
+        error: '[AUTH ERROR]: Email & Password are needed',
+        message: 'Please, provide a valid email && password to login',
+      };
+    }
 
-      return token;
+    // Generate our JWT
+    const token = jwt.sign({ email: user.email }, secret, {
+      expiresIn: '2h',
     });
+
+    return {
+      user,
+      token,
+    };
   } catch (error) {
     LogError(`[ORM ERROR]: Login User: ${error}`);
   }

@@ -32,24 +32,6 @@ userRouter
     // Send response to client
     return res.status(200).send(response);
   })
-  // POST
-  .post(async (req: Request, res: Response) => {
-    const name = req?.body?.name || 'default name';
-    const email = req?.body?.email || 'default email';
-    const age = req?.body?.age || 25;
-
-    const user = {
-      name,
-      email,
-      age,
-    };
-    // Controller Instance method to execute
-    const controller: UserController = new UserController();
-    // Obtain Response
-    const response: any = await controller.createUser(user);
-    // Send response to client
-    return res.status(201).send(response);
-  })
   // UPDATE
   .put(async (req: Request, res: Response) => {
     // Obtain a Query Param

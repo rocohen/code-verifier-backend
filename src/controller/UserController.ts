@@ -1,4 +1,4 @@
-import { Body, Delete, Get, Post, Put, Query, Route, Tags } from 'tsoa';
+import { Body, Delete, Get, Put, Query, Route, Tags } from 'tsoa';
 import { IUserController } from './interfaces';
 import { LogSuccess, LogWarning } from '../utils/logger';
 
@@ -7,7 +7,6 @@ import {
   getAllUsers,
   getUserByID,
   deleteUserByID,
-  createUser,
   updateUserByID,
 } from '../domain/orm/User.orm';
 
@@ -55,18 +54,6 @@ export class UserController implements IUserController {
         message: 'Please provide a valid ID',
       };
     }
-    return response;
-  }
-
-  @Post('/')
-  public async createUser(@Body() user: any): Promise<any> {
-    let response: any = '';
-    LogSuccess(`[/api/users] Create User ${user}`);
-    await createUser(user).then((r) => {
-      response = {
-        message: `User created successfully: ${user.name}`,
-      };
-    });
     return response;
   }
 

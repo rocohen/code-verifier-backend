@@ -292,6 +292,37 @@
 				}
 			}
 		},
+		"/api/auth/me": {
+			"get": {
+				"operationId": "UserData",
+				"responses": {
+					"200": {
+						"description": "User found by ID",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint that retrieves a single User from the \"Users\" Collection in DB\r\nMiddleware: Validate JWT\r\nIn order to work: you should add the x-access-token with a valid JWT in headers",
+				"tags": [
+					"AuthController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id of user to retrieve",
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/api/auth/logout": {
 			"post": {
 				"operationId": "LogoutUser",

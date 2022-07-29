@@ -11,6 +11,14 @@ export type BasicResponse = {
  */
 
 export type ErrorResponse = {
-  error: string,
-  message: string
+  error: string;
+  message: string;
+};
+
+/**
+ * Auth JSON response for Controllers
+ */
+export type AuthResponse = {
+  message: string;
+  token: string;
 };
