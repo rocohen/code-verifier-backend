@@ -13,10 +13,15 @@ userRouter
     // Obtain a Query Param
     const id: any = req?.query?.id;
     LogInfo(`Query Param: ${id}`);
+
+    // Pagination
+    const page: number = Number(req?.query?.page) || 1;
+    const limit: number = Number(req?.query?.limit) || 10;
+
     // Controller Instance method to execute
     const controller: UserController = new UserController();
     // Obtain Response
-    const response: any = await controller.getUsers(id);
+    const response: any = await controller.getUsers(page, limit, id);
     // Send response to client
     return res.status(200).send(response);
   })

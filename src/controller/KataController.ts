@@ -27,7 +27,13 @@ export class KataController implements IKataController {
    * @returns All katas or kata found by ID or Katas by level
    */
   @Get('/')
-  public async getKatas(@Query() id?: string, @Query() level?: string, @Query() sort?: string): Promise<any> {
+  public async getKatas(
+    @Query() page: number,
+    @Query() limit: number,
+    @Query() id?: string,
+    @Query() level?: string,
+    @Query() sort?: string
+  ): Promise<any> {
     let response: any = '';
 
     if (id) {
@@ -47,7 +53,7 @@ export class KataController implements IKataController {
       response = await getKatasByChances();
     } else {
       LogSuccess('[/api/katas] Get All Katas Request');
-      response = await getAllKatas();
+      response = await getAllKatas(page, limit);
     }
     return response;
   }
@@ -101,7 +107,10 @@ export class KataController implements IKataController {
    * @returns message informing if kata was updated successfully
    */
   @Put('/')
-  public async updateKata(@Query() id: string, @Body() kata: any): Promise<any> {
+  public async updateKata(
+    @Query() id: string,
+    @Body() kata: any
+  ): Promise<any> {
     let response: any = '';
 
     if (id && kata) {
@@ -127,7 +136,10 @@ export class KataController implements IKataController {
    * @returns message informing if kata was rated successfully
    */
   @Put('/{id}')
-  public async rateKata(@Path() id: string, @Body() userValoration: number): Promise<any> {
+  public async rateKata(
+    @Path() id: string,
+    @Body() userValoration: number
+  ): Promise<any> {
     let response: any = '';
 
     if (id) {

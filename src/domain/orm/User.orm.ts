@@ -2,6 +2,7 @@ import { userEntity } from '../entities/User.entity';
 import { LogError } from '../../utils/logger';
 import { IUser } from '../interfaces/IUser.interface';
 import { IAuth } from '../interfaces/IAuth.interface';
+import { UsersResponse } from '../types/UsersResponse.type';
 
 // Environment variables
 import dotenv from 'dotenv';
@@ -23,12 +24,35 @@ const secret: string = process.env.SECRETKEY || 'MYSECRETKEY';
 /**
  * Method to obtain all Users from Collection "Users" in Mongo Server
  */
-export const getAllUsers = async (): Promise<any[] | undefined> => {
+export const getAllUsers = async (
+  page: number,
+  limit: number
+): Promise<UsersResponse | undefined> => {
   try {
     const userModel = userEntity();
+    const response: UsersResponse = {
+      users: [],
+      totalPages: 0,
+      currentPage: page,
+    };
 
-    // Search all users
-    return await userModel.find({ isDelete: false }, { password: 0 });
+    // Search all users (using pagination)
+    await userModel
+      .find({ isDelete: false }, { password: 0, __v: 0 })
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .exec()
+      .then((users: IUser[]) => {
+        response.users = users;
+      });
+
+    // Count total documents in collection "Users"
+    await userModel.countDocuments().then((total: number) => {
+      response.totalPages = Math.ceil(total / limit);
+      response.currentPage = page;
+    });
+
+    return response;
   } catch (error) {
     LogError(`[ORM ERROR]: Getting All Users: ${error}`);
   }
@@ -39,7 +63,7 @@ export const getUserByID = async (id: string): Promise<any | undefined> => {
   try {
     const userModel = userEntity();
     // Search User by ID
-    return await userModel.findById({ _id: id }, { password: 0 });
+    return await userModel.findById({ _id: id }, { password: 0, __v: 0 });
   } catch (error) {
     LogError(`[ORM ERROR]: Getting User By ID: ${error}`);
   }

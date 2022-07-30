@@ -9,4 +9,8 @@ export interface IKata {
   description: string;
   level: KataLevel;
   author: string;
+  date?: Date;
+  valoration?: number;
+  peopleWhoRated?: number;
+  chances?: number;
 }

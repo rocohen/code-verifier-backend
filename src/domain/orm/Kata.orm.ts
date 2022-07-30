@@ -1,16 +1,38 @@
 import { kataEntity } from '../entities/Kata.entity';
 import { LogError } from '../../utils/logger';
+import { KatasResponse } from '../types/KatasResponse.type';
+import { IKata } from '../interfaces/Ikata.interface';
 
 // CRUD
 /**
  * Method to obtain all Katas from Collection "Katas" in Mongo db
  */
-export const getAllKatas = async (): Promise<any[] | undefined> => {
+export const getAllKatas = async (page: number, limit: number): Promise<KatasResponse | undefined> => {
   try {
     const kataModel = kataEntity();
+    const response: KatasResponse = {
+      katas: [],
+      totalPages: 0,
+      currentPage: page,
+    };
 
     // Search all katas
-    return await kataModel.find({ isDelete: false });
+    await kataModel
+      .find({ isDelete: false }, { __v: 0 })
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .exec()
+      .then((katas: IKata[]) => {
+        response.katas = katas;
+      });
+
+    // Count total documents in collection "Katas"
+    await kataModel.countDocuments().then((total: number) => {
+      response.totalPages = Math.ceil(total / limit);
+      response.currentPage = page;
+    });
+
+    return response;
   } catch (error) {
     LogError(`[ORM ERROR]: Getting All Katas: ${error}`);
   }

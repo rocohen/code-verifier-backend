@@ -19,7 +19,11 @@ export class UserController implements IUserController {
    * @returns All users or user found by ID
    */
   @Get('/')
-  public async getUsers(@Query() id?: string): Promise<any> {
+  public async getUsers(
+    @Query() page: number,
+    @Query() limit: number,
+    @Query() id?: string
+  ): Promise<any> {
     let response: any = '';
 
     if (id) {
@@ -27,7 +31,7 @@ export class UserController implements IUserController {
       response = await getUserByID(id);
     } else {
       LogSuccess('[/api/users] Get All Users Request');
-      response = await getAllUsers();
+      response = await getAllUsers(page, limit);
     }
     return response;
   }
@@ -58,7 +62,10 @@ export class UserController implements IUserController {
   }
 
   @Put('/')
-  public async updateUser(@Query() id: string, @Body() user: any): Promise<any> {
+  public async updateUser(
+    @Query() id: string,
+    @Body() user: any
+  ): Promise<any> {
     let response: any = '';
 
     if (id) {
