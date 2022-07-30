@@ -25,6 +25,7 @@ authRouter.route('/register').post(async (req: Request, res: Response) => {
       email,
       password: hashedPassword,
       age,
+      katas: [],
     };
 
     // Controller Instance method to execute

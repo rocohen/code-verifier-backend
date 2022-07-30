@@ -1,122 +1,141 @@
 import express, { Request, Response } from 'express';
 import { KataController } from '../controller/KataController';
-import { IKata } from '../domain/interfaces/Ikata.interface';
 import { LogInfo } from '../utils/logger';
+
+import { KataLevel, IKata } from '../domain/interfaces/IKata.interface';
 
 // Router from express
 const kataRouter = express.Router();
 
-// http://localhost:8000/api/katas/
+// http://localhost:8000/api/users?id=6253dc47f30baed4c6de7f99
 kataRouter
   .route('/')
   // GET:
   .get(async (req: Request, res: Response) => {
-    // Obtain a Query Param
+    // Obtain a Query Param (ID)
     const id: any = req?.query?.id;
-    const level: any = req?.query?.level;
-    const sort: any = req?.query?.sort;
-    LogInfo(`Query Param: ${id}, ${level}, ${sort}`);
 
     // Pagination
     const page: number = Number(req?.query?.page) || 1;
     const limit: number = Number(req?.query?.limit) || 10;
 
-    // Controller Instance method to execute
+    LogInfo(`Query Param: ${id}`);
+    // Controller Instance to excute method
     const controller: KataController = new KataController();
-    // Obtain Response
-    const response: any = await controller.getKatas(page, limit, id, level, sort);
-    // Send response to client
-    return res.send(response);
+    // Obtain Reponse
+    const response: any = await controller.getKatas(page, limit, id);
+    // Send to the client the response
+    return res.status(200).send(response);
   })
-  // DELETE
+  // DELETE:
   .delete(async (req: Request, res: Response) => {
-    // Obtain a Query Param
+    // Obtain a Query Param (ID)
     const id: any = req?.query?.id;
     LogInfo(`Query Param: ${id}`);
-    // Controller Instance method to execute
+    // Controller Instance to excute method
     const controller: KataController = new KataController();
-    // Obtain Response
+    // Obtain Reponse
     const response: any = await controller.deleteKata(id);
-    // Send response to client
-    return res.send(response);
+    // Send to the client the response
+    return res.status(200).send(response);
   })
-  // POST
-  .post(async (req: Request, res: Response) => {
-    const name = req?.body?.name || 'default name';
-    const description = req?.body?.description || 'default description';
-    const level = req?.body?.level || 'Easy';
-    const author = req?.body?.author || 'John Doe';
-
-    const kata: IKata = {
-      name,
-      description,
-      level,
-      author,
-    };
-    // Controller Instance method to execute
-    const controller: KataController = new KataController();
-    // Obtain Response
-    const response: any = await controller.createKata(kata);
-    // Send response to client
-    return res.send(response);
-  })
-  // UPDATE
   .put(async (req: Request, res: Response) => {
-    // Obtain a Query Param
+    // Obtain a Query Param (ID)
     const id: any = req?.query?.id;
-    LogInfo(`Query Param: ${id}`);
 
-    const {
-      name,
-      description,
-      level,
-      author,
-      date,
-      valoration,
-      peopleWhoRated,
-      chances,
-    } = req?.body;
+    // Read from body
+    const name: string = req?.body?.name;
+    const description: string = req?.body?.description || '';
+    const level: KataLevel = req?.body?.level || KataLevel.BASIC;
+    const intents: number = req?.body?.intents || 0;
+    const stars: number = req?.body?.starts || 0;
+    const creator: string = req?.body?.creator;
+    const solution: string = req?.body?.solution || '';
+    const participants: string[] = req?.body?.participants || [];
 
-    LogInfo(
-      `Query Body: ${name}, ${description}, ${level}, ${author}, ${date}, ${valoration},${peopleWhoRated}, ${chances}`
-    );
+    if (
+      name &&
+      description &&
+      level &&
+      intents >= 0 &&
+      stars >= 0 &&
+      creator &&
+      solution &&
+      participants.length >= 0
+    ) {
+      // Controller Instance to excute method
+      const controller: KataController = new KataController();
 
-    const kata = {
-      name,
-      description,
-      level,
-      author,
-      date,
-      valoration,
-      peopleWhoRated,
-      chances,
-    };
-    // Controller Instance method to execute
-    const controller: KataController = new KataController();
-    // Obtain Response
-    const response: any = await controller.updateKata(id, kata);
-    // Send response to client
-    return res.send(response);
+      const kata: IKata = {
+        name,
+        description,
+        level,
+        intents,
+        stars,
+        creator,
+        solution,
+        participants,
+      };
+
+      // Get Response
+      const response: any = await controller.updateKata(id, kata);
+
+      // Send to the client the response
+      return res.status(200).send(response);
+    } else {
+      return res.status(400).send({
+        message:
+          '[ERROR] Updating Kata. You need to send all attributes of Kata to update it',
+      });
+    }
+  })
+  .post(async (req: Request, res: Response) => {
+    // Read from body
+    const name: string = req?.body?.name;
+    const description: string = req?.body?.description || 'Default description';
+    const level: KataLevel = req?.body?.level || KataLevel.BASIC;
+    const intents: number = req?.body?.intents || 0;
+    const stars: number = req?.body?.stars || 0;
+    const creator: string = req?.body?.creator;
+    const solution: string = req?.body?.solution || 'Default Solution';
+    const participants: string[] = req?.body?.participants || [];
+
+    if (
+      name &&
+      description &&
+      level &&
+      intents >= 0 &&
+      stars >= 0 &&
+      creator &&
+      solution &&
+      participants.length >= 0
+    ) {
+      // Create new Controller instance in order to excute its methods
+      const controller: KataController = new KataController();
+
+      const kata: IKata = {
+        name,
+        description,
+        level,
+        intents,
+        stars,
+        creator,
+        solution,
+        participants,
+      };
+
+      // Get Response
+      const response: any = await controller.createKata(kata);
+
+      // Send response to client
+      return res.status(201).send(response);
+    } else {
+      return res.status(400).send({
+        message:
+          '[ERROR] Creating Kata. You need to send all attributes of Kata to create it',
+      });
+    }
   });
 
-// http://localhost:8000/api/katas/:id
-kataRouter
-  .route('/:id')
-  // Rate a kata
-  .put(async (req: Request, res: Response) => {
-    // Obtain a Query Param
-    const id: any = req?.params?.id;
-    LogInfo(`Request Param: ${id}`);
-    // Body info
-    const valoration: number = req?.body?.valoration;
-    LogInfo(`Query Body: ${valoration}`);
-    // Controller Instance method to execute
-    const controller: KataController = new KataController();
-    // Obtain Response
-    const response: any = await controller.rateKata(id, valoration);
-    // Send response to client
-    return res.send(response);
-  });
-
-// Export Kata Router
+// Export Katas Router
 export default kataRouter;

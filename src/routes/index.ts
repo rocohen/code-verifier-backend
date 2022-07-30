@@ -33,7 +33,7 @@ rootRouter.get('/', (req: Request, res: Response) => {
 server.use('/', rootRouter); // http://localhost:8000/api/
 server.use('/hello', helloRouter); // http://localhost:8000/api/hello --> HelloRouter
 server.use('/users', verifyToken, userRouter); // http://localhost:8000/api/users --> userRouter
-server.use('/katas', verifyToken, kataRouter); // http://localhost:8000/api/katas --> kataRouter
+server.use('/katas', verifyToken, kataRouter); // http://localhost:8000/api/katas --> KatasRouter
 // Auth routes
 server.use('/auth', authRouter); // http://localhost:8000/api/auth --> AuthRouter
 

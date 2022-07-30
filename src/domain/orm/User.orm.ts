@@ -1,8 +1,11 @@
 import { userEntity } from '../entities/User.entity';
+import { kataEntity } from '../entities/Kata.entity';
 import { LogError } from '../../utils/logger';
 import { IUser } from '../interfaces/IUser.interface';
 import { IAuth } from '../interfaces/IAuth.interface';
+import { IKata } from '../interfaces/IKata.interface';
 import { UsersResponse } from '../types/UsersResponse.type';
+import mongoose from "mongoose";
 
 // Environment variables
 import dotenv from 'dotenv';
@@ -80,17 +83,6 @@ export const deleteUserByID = async (id: string): Promise<any | undefined> => {
   }
 };
 
-// - Create new User
-export const createUser = async (user: any): Promise<any | undefined> => {
-  try {
-    const userModel = userEntity();
-    // Create / Insert new User
-    return await userModel.create(user);
-  } catch (error) {
-    LogError(`[ORM ERROR]: Creating User: ${error}`);
-  }
-};
-
 // - Update User by ID
 export const updateUserByID = async (
   id: string,
@@ -160,4 +152,54 @@ export const loginUser = async (auth: IAuth): Promise<any | undefined> => {
 // Logout User
 export const logoutUser = async (): Promise<any | undefined> => {
   // TODO: Not implemented
+};
+
+/**
+ * Method to Get all Users from "Users" Collection in Mongo Server
+ */
+export const getKatasByUser = async (
+  page: number,
+  limit: number,
+  id: string
+): Promise<any[] | undefined> => {
+  try {
+    const userModel = userEntity();
+    const katasModel = kataEntity();
+
+    let katasFound: IKata[] = [];
+
+    const response: any = {
+      katas: [],
+    };
+
+    console.log('User ID', id);
+
+    await userModel
+      .findById(id)
+      .then(async (user: IUser) => {
+        response.user = user.email;
+
+        // Create types to search
+        const objectIds: mongoose.Types.ObjectId[] = [];
+        user.katas.forEach((kataID: string) => {
+          const objectID = new mongoose.Types.ObjectId(kataID);
+          objectIds.push(objectID);
+        });
+
+        await katasModel
+          .find({ _id: { $in: objectIds } })
+          .then((katas: IKata[]) => {
+            katasFound = katas;
+          });
+      })
+      .catch((error) => {
+        LogError(`[ORM ERROR]: Getting User: ${error}`);
+      });
+
+    response.katas = katasFound;
+
+    return response;
+  } catch (error) {
+    LogError(`[ORM ERROR]: Getting All Users: ${error}`);
+  }
 };

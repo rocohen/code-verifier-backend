@@ -1,16 +1,16 @@
 export enum KataLevel {
-  BASIC = 'Easy',
+  BASIC = 'Basic',
   MEDIUM = 'Medium',
-  HIGH = 'Hard',
+  HIGH = 'High'
 }
 
 export interface IKata {
-  name: string;
-  description: string;
-  level: KataLevel;
-  author: string;
-  date?: Date;
-  valoration?: number;
-  peopleWhoRated?: number;
-  chances?: number;
+  name: string,
+  description: string,
+  level: KataLevel,
+  intents: number,
+  stars: number,
+  creator: string, // Id of user
+  solution: string,
+  participants: string[]
 }

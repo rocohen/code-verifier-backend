@@ -7,6 +7,7 @@ export const userEntity = () => {
     email: { type: String, required: true },
     password: { type: String, required: true },
     age: { type: Number, required: true },
+    katas: { type: [], required: true },
   });
 
   return mongoose.models.User || mongoose.model<IUser>('User', userSchema);
