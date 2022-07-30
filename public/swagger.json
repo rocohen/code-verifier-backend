@@ -61,10 +61,7 @@
 					"name",
 					"description",
 					"level",
-					"author",
-					"valoration",
-					"peopleWhoRated",
-					"chances"
+					"author"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -179,6 +176,24 @@
 				"security": [],
 				"parameters": [
 					{
+						"in": "query",
+						"name": "page",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
 						"description": "Id of user to retrieve (optional)",
 						"in": "query",
 						"name": "id",
@@ -273,6 +288,24 @@
 				],
 				"security": [],
 				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
 					{
 						"description": "Id of kata to retrieve (optional)",
 						"in": "query",

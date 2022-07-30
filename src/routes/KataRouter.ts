@@ -16,10 +16,15 @@ kataRouter
     const level: any = req?.query?.level;
     const sort: any = req?.query?.sort;
     LogInfo(`Query Param: ${id}, ${level}, ${sort}`);
+
+    // Pagination
+    const page: number = Number(req?.query?.page) || 1;
+    const limit: number = Number(req?.query?.limit) || 10;
+
     // Controller Instance method to execute
     const controller: KataController = new KataController();
     // Obtain Response
-    const response: any = await controller.getKatas(id, level, sort);
+    const response: any = await controller.getKatas(page, limit, id, level, sort);
     // Send response to client
     return res.send(response);
   })

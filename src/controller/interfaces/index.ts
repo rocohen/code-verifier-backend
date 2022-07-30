@@ -7,7 +7,7 @@ export interface IHelloController {
 
 export interface IUserController {
   // Read all users from databse || get User By ID
-  getUsers(id?: string): Promise<any>;
+  getUsers(page: number, limit: number, id?: string): Promise<any>;
   // Delete User By ID
   deleteUser(id?: string): Promise<any>;
   // Update User
@@ -16,7 +16,7 @@ export interface IUserController {
 
 export interface IKataController {
   // List all Katas from database || get a single Kata By ID
-  getKatas(id?: string, level?: string, sort?: string): Promise<any>;
+  getKatas(page: number, limit: number, id?: string, level?: string, sort?: string): Promise<any>;
   // Delete Kata By ID
   deleteKata(id?: string): Promise<any>;
   // Create new Kata
