@@ -11,6 +11,7 @@ export const kataEntity = () => {
     creator: { type: String, required: true },
     solution: { type: String, required: true },
     participants: { type: [], required: true },
+    peopleWhoRated: { type: Number, required: true, default: 0 },
   });
 
   return mongoose.models.Kata || mongoose.model<IKata>('Kata', kataSchema);

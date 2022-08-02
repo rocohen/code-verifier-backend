@@ -51,7 +51,6 @@ authRouter.route('/login').post(async (req: Request, res: Response) => {
     // Controller Instance method to execute
     const controller: AuthController = new AuthController();
 
-    // TODO: IAuth
     const auth: IAuth = {
       email,
       password,

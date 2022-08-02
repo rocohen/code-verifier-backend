@@ -56,6 +56,10 @@
 							"type": "string"
 						},
 						"type": "array"
+					},
+					"peopleWhoRated": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -66,13 +70,17 @@
 					"stars",
 					"creator",
 					"solution",
-					"participants"
+					"participants",
+					"peopleWhoRated"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
 			"IUser": {
 				"properties": {
+					"_id": {
+						"type": "string"
+					},
 					"name": {
 						"type": "string"
 					},
@@ -85,13 +93,20 @@
 					"age": {
 						"type": "number",
 						"format": "double"
+					},
+					"katas": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
 					"name",
 					"email",
 					"password",
-					"age"
+					"age",
+					"katas"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -274,12 +289,12 @@
 				}
 			}
 		},
-		"/api/katas": {
+		"/api/users/katas": {
 			"get": {
 				"operationId": "GetKatas",
 				"responses": {
 					"200": {
-						"description": "All katas o kata found by ID",
+						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {}
@@ -287,9 +302,8 @@
 						}
 					}
 				},
-				"description": "Endpoint that retrieves katas from \"Katas\" Collection in DB",
 				"tags": [
-					"KatasController"
+					"UserController"
 				],
 				"security": [],
 				"parameters": [
@@ -312,9 +326,77 @@
 						}
 					},
 					{
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/katas": {
+			"get": {
+				"operationId": "GetKatas",
+				"responses": {
+					"200": {
+						"description": "All katas o kata found by ID",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint that retrieves katas from \"Katas\" Collection in DB",
+				"tags": [
+					"KatasController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "page number for displaying a list of katas from DB",
+						"in": "query",
+						"name": "page",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "limits to a number the list of katas retrieved from DB",
+						"in": "query",
+						"name": "limit",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
 						"description": "Id of Kata to retrieve (optional)",
 						"in": "query",
 						"name": "id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "level of a Katas with options: Basic, Medium and High",
+						"in": "query",
+						"name": "level",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "sorts katas by stars given in descending order (default).",
+						"in": "query",
+						"name": "sort",
 						"required": false,
 						"schema": {
 							"type": "string"
@@ -326,7 +408,7 @@
 				"operationId": "CreateKata",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "message informing if kata was created",
 						"content": {
 							"application/json": {
 								"schema": {}
@@ -340,11 +422,13 @@
 				"security": [],
 				"parameters": [],
 				"requestBody": {
+					"description": "data to create a kata",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IKata"
+								"$ref": "#/components/schemas/IKata",
+								"description": "data to create a kata"
 							}
 						}
 					}
@@ -383,7 +467,7 @@
 				"operationId": "UpdateKata",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "message informing if kata was updated successfully",
 						"content": {
 							"application/json": {
 								"schema": {}
@@ -397,6 +481,7 @@
 				"security": [],
 				"parameters": [
 					{
+						"description": "Id of Kata to update",
 						"in": "query",
 						"name": "id",
 						"required": true,
@@ -406,11 +491,97 @@
 					}
 				],
 				"requestBody": {
+					"description": "kata object to update",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IKata"
+								"$ref": "#/components/schemas/IKata",
+								"description": "kata object to update"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/katas/{id}": {
+			"patch": {
+				"operationId": "RateKata",
+				"responses": {
+					"200": {
+						"description": "message informing if kata was rated successfully",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Endpoint that rates a single Kata by passing an ID",
+				"tags": [
+					"KatasController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id of kata to rate",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "number to rate a kata",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "number",
+								"format": "double",
+								"description": "number to rate a kata"
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"operationId": "SolveKata",
+				"responses": {
+					"200": {
+						"description": "kata solution to user.",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"KatasController"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Id of kata to solve",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "solution given by user",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "string",
+								"description": "solution given by user"
 							}
 						}
 					}

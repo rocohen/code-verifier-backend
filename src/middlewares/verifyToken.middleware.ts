@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
+import httpContext from 'express-http-context';
 
 import dotenv from 'dotenv';
 
@@ -40,6 +41,9 @@ export const verifyToken = (
         message: 'Failed to verify JWT token in request',
       });
     }
+
+    // Set logged user to http context
+    httpContext.set('user', decoded.userId);
 
     // Execute Next Function -> Protected Routes will be executed
     next();

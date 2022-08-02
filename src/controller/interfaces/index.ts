@@ -26,11 +26,15 @@ export interface IAuthController {
 
 export interface IKataController {
   // Read all katas from database || get Kata By ID
-  getKatas(page: number, limit: number, id?: string): Promise<any>
+  getKatas(page: number, limit: number, id?: string, level?: string, sort?: string): Promise<any>
   // Create New Kata
   createKata(kata: IKata): Promise<any>
   // Delete Kata By ID
   deleteKata(id?:string): Promise<any>
   // Update Kata
   updateKata(id:string, kata: IKata): Promise<any>
+  // Rate Kata
+  rateKata(id: string, userValoration: number): Promise<any>;
+  // Solve kata
+  solveKata(id: string, userSolution: string): Promise<any>
 }

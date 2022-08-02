@@ -5,7 +5,7 @@ import { IUser } from '../interfaces/IUser.interface';
 import { IAuth } from '../interfaces/IAuth.interface';
 import { IKata } from '../interfaces/IKata.interface';
 import { UsersResponse } from '../types/UsersResponse.type';
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 // Environment variables
 import dotenv from 'dotenv';
@@ -65,6 +65,7 @@ export const getAllUsers = async (
 export const getUserByID = async (id: string): Promise<any | undefined> => {
   try {
     const userModel = userEntity();
+
     // Search User by ID
     return await userModel.findById({ _id: id }, { password: 0, __v: 0 });
   } catch (error) {
@@ -84,10 +85,7 @@ export const deleteUserByID = async (id: string): Promise<any | undefined> => {
 };
 
 // - Update User by ID
-export const updateUserByID = async (
-  id: string,
-  user: any
-): Promise<any | undefined> => {
+export const updateUserByID = async (id: string, user: any): Promise<any | undefined> => {
   try {
     const userModel = userEntity();
     // Update User
@@ -112,7 +110,6 @@ export const registerUser = async (user: IUser): Promise<any | undefined> => {
 export const loginUser = async (auth: IAuth): Promise<any | undefined> => {
   try {
     const userModel = userEntity();
-
     // Check if user exists by Unique Email
     const user: IUser | null = await userModel.findOne({ email: auth.email });
 
@@ -135,8 +132,9 @@ export const loginUser = async (auth: IAuth): Promise<any | undefined> => {
       };
     }
 
-    // Generate our JWT
-    const token = jwt.sign({ email: user.email }, secret, {
+    const userId = user._id?.toString();
+
+    const token = jwt.sign({ email: user.email, userId }, secret, {
       expiresIn: '2h',
     });
 
@@ -186,11 +184,9 @@ export const getKatasByUser = async (
           objectIds.push(objectID);
         });
 
-        await katasModel
-          .find({ _id: { $in: objectIds } })
-          .then((katas: IKata[]) => {
-            katasFound = katas;
-          });
+        await katasModel.find({ _id: { $in: objectIds } }).then((katas: IKata[]) => {
+          katasFound = katas;
+        });
       })
       .catch((error) => {
         LogError(`[ORM ERROR]: Getting User: ${error}`);
